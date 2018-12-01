@@ -212,13 +212,15 @@ def default(event):
         TextSendMessage(text='Currently Not Support None Text Message')
     )
 
+
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     data = apiMl.getObjectDetection(message_content.content)
-
+    textStr = 'Total Price : ' + str(data['Total']) + 'Baht'
+    print(textStr)
     carousel_template = CarouselTemplate(columns=[
-        CarouselColumn(text='Total Price : ' + str(data['Total']), title='Your product', actions=[
+        CarouselColumn(text=textStr, title='You can get ri(d)ch', actions=[
             PostbackAction(label='Test text', data='ping', text='ping'),
             MessageAction('Total Price : ' + str(data['Total']))
         ]),
@@ -226,6 +228,7 @@ def handle_image_message(event):
     template_message = TemplateSendMessage(
         alt_text='Carousel alt text', template=carousel_template)
     line_bot_api.reply_message(event.reply_token, template_message)
+
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
