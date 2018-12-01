@@ -165,8 +165,8 @@ def handle_text_message(event):
                 CameraAction(label='Take a photo'),
                 PostbackAction(label='ping', data='ping')
             ]),
-            CarouselColumn(text='hoge2', title='fuga2', actions=[
-                PostbackAction(label='ping with text', data='ping', text='ping'),
+            CarouselColumn(text='Options', title='Buyer', actions=[
+                PostbackAction(label='Test ping with text', data='ping', text='ping'),
                 MessageAction(label='Translate Rice', text='米')
             ]),
         ])
@@ -205,8 +205,8 @@ def handle_image_message(event):
 
     carousel_template = CarouselTemplate(columns=[
         CarouselColumn(text='Your product', actions=[
-            MessageAction('Total Price : ' + str(data['Total'])),
-            PostbackAction(label='ping', data='ping')
+            PostbackAction(label='Test text', data='ping', text='ping'),
+            MessageAction('Total Price : ' + str(data['Total']))
         ]),
     ])
     template_message = TemplateSendMessage(
