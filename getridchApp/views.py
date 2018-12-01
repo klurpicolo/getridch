@@ -43,11 +43,11 @@ def handle_text_message(event):
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(text='What you can do', title='Seller', actions=[
                 CameraAction(label='Take a photo'),
-                PostbackAction(label='ping', data='ping')
+                # PostbackAction(label='ping', data='ping')
             ]),
-            CarouselColumn(text='hoge2', title='fuga2', actions=[
-                PostbackAction(label='ping with text', data='ping', text='ping'),
-                MessageAction(label='Translate Rice', text='米')
+            CarouselColumn(text='What you can do', title='Buyer', actions=[
+                PostbackAction(label='Get near by trash', data='getNearbyLocation', text='getNearbyLocation'),
+                # MessageAction(label='Translate Rice', text='米')
             ]),
         ])
         template_message = TemplateSendMessage(
@@ -202,6 +202,9 @@ def handle_postback(event):
     elif event.postback.data == 'date_postback':
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
+    elif event.postback.data == 'getNearbyLocation':
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='Debug : Put trash location here')
 
 
 @handler.default()
