@@ -19,5 +19,5 @@ from getridchApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('getridchApp/', include('getridchApp.urls'))
+    path('getridchApp/callback', include('getridchApp.urls'))
 ]

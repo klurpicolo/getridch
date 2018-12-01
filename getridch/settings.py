@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -26,12 +28,13 @@ def get_env_variable(var_name):
         return os.environ[var_name]
     except KeyError:
         error_msg = 'Set the {} environment variable'.format(var_name)
+        raise ImproperlyConfigured(error_msg)
 try:
     from .settings_secret import *
 except ImportError:
-    SECRET_KEY = 'g%w)y0ra*50ln0gi6=v7&czk^mji!5r6pl4$)&7s#zuxvduqr('
-    LINE_CHANNEL_ACCESS_TOKEN = get_env_variable('FM6Q6U/BAWJlaQMzPOneNK6QT0Di9qZ93VtKt4w6NnnX1U6/1fqduzsoAjW3/kpnVrLj4GGobh/XsVqZaccp+Ra44QRKxrL6m8fFFDhUOpGvDKFu5P4Qf1c1I0qe6p9FAA7Mno9YPr510Sfh3B8xxwdB04t89/1O/w1cDnyilFU=')
-    LINE_CHANNEL_SECRET = get_env_variable('1e7ab9437dc85f54d08cf117425398ca')
+    SECRET_KEY = get_env_variable('SECRET_KEY')
+    LINE_CHANNEL_ACCESS_TOKEN = get_env_variable('LINE_CHANNEL_ACCESS_TOKEN')
+    LINE_CHANNEL_SECRET = get_env_variable('LINE_CHANNEL_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
