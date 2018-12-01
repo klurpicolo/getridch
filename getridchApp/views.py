@@ -57,6 +57,11 @@ def handle_text_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Bot can't use profile API without user ID"))
+    elif text == 'confirm':
+        confirm_template = ConfirmTemplate(text='Do it?', actions=[MessageAction(label='Yes', text='Yes!'),
+                                                                   MessageAction(label='No', text='No!')])
+        template_message = TemplateSendMessage(alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
 
