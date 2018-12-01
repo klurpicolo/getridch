@@ -199,11 +199,10 @@ def default(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
     # line_bot_api.reply_message(event.reply_token, TextSendMessage('Send Success!!'))
-
-    message_content = line_bot_api.get_message_content(event.message.type)
-    # data = open('C:/Users/Welly-TP/Desktop/2018-07-27_23-45-18.png', 'rb').read()
-    print(type(message_content))
-    apiMl.getObjectDetection(message_content)
+    # message_content = line_bot_api.get_message_content(event.message.type)
+    data = open('./static/download.jpg', 'rb').read()
+    print(type(data))
+    apiMl.getObjectDetection(data)
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
 
 @handler.add(MessageEvent, message=LocationMessage)
