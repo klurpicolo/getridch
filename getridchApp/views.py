@@ -204,10 +204,7 @@ def handle_image_message(event):
     # data = open('C:/Users/Welly-TP/Desktop/2018-07-27_23-45-18.png', 'rb').read()
     print(type(message_content))
     apiMl.getObjectDetection(message_content)
-    line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text='Save content.')
-        ])
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
