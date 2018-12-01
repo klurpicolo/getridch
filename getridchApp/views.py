@@ -204,7 +204,7 @@ def handle_postback(event):
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
     elif event.postback.data == 'getNearbyLocation':
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text='Debug : Put trash location here')
+            event.reply_token, TextSendMessage(text='Debug : Put trash location here'))
 
 
 @handler.default()
