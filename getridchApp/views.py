@@ -27,19 +27,6 @@ from linebot.models import (
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 # parser = WebhookParser('1e7ab9437dc85f54d08cf117425398ca')
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-
-
-# function for create tmp dir for download content
-def make_static_tmp_dir():
-    try:
-        os.makedirs(static_tmp_path)
-    except OSError as exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(static_tmp_path):
-            pass
-        else:
-            raise
-
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
@@ -225,6 +212,9 @@ def handle_image_message(event):
         return
 
     message_content = line_bot_api.get_message_content(event.message.id)
+
+    static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+    print(static_tmp_path)
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
         for chunk in message_content.iter_content():
             tf.write(chunk)
