@@ -212,7 +212,7 @@ def handle_image_message(event):
     else:
         return
 
-    message_content = line_bot_api.get_message_content(event.message.id.content)
+    message_content = line_bot_api.get_message_content(event.message.id)
 
     # static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
     # print(static_tmp_path)
