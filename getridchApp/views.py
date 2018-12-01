@@ -1,7 +1,11 @@
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, request
 from django.views.decorators.csrf import csrf_exempt
-
+from . import apiMl
+import errno
+import os
+import sys
+import tempfile
 from linebot import LineBotApi, WebhookParser, WebhookHandler
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import (
@@ -21,7 +25,7 @@ from linebot.models import (
 )
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
-parser = WebhookParser('1e7ab9437dc85f54d08cf117425398ca')
+# parser = WebhookParser('1e7ab9437dc85f54d08cf117425398ca')
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 
 
@@ -157,6 +161,20 @@ def handle_text_message(event):
                                                                    MessageAction(label='No', text='No!')])
         template_message = TemplateSendMessage(alt_text='Confirm alt text', template=confirm_template)
         line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'list':
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(text='What you can do', title='Seller', actions=[
+                CameraAction(label='Take a photo'),
+                PostbackAction(label='ping', data='ping')
+            ]),
+            CarouselColumn(text='hoge2', title='fuga2', actions=[
+                PostbackAction(label='ping with text', data='ping', text='ping'),
+                MessageAction(label='Translate Rice', text='米')
+            ]),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Carousel alt text', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
 
@@ -185,7 +203,31 @@ def default(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
-    line_bot_api.reply_message(event.reply_token, TextSendMessage('Send Success!!'))
+    if isinstance(event.message, ImageMessage):
+        ext = 'jpg'
+    elif isinstance(event.message, VideoMessage):
+        ext = 'mp4'
+    elif isinstance(event.message, AudioMessage):
+        ext = 'm4a'
+    else:
+        return
+
+    message_content = line_bot_api.get_message_content(event.message.id)
+
+    # static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+    # print(static_tmp_path)
+
+    # dist_path = tempfile_path + '.' + ext
+    # dist_name = os.path.basename(dist_path)
+    # os.rename(tempfile_path, dist_path)
+    # data = open('./static/download.jpg', 'rb').read()
+    # print('message_content id : ' + message_content)
+    # data = line_bot_api.get_message_content(message_content.content)
+    # print('data : ' + type(data))
+    apiMl.getObjectDetection(message_content.content)
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
+
+    # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
