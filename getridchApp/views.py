@@ -2,6 +2,10 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, request
 from django.views.decorators.csrf import csrf_exempt
 from . import apiMl
+import errno
+import os
+import sys
+import tempfile
 from linebot import LineBotApi, WebhookParser, WebhookHandler
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import (
@@ -23,6 +27,19 @@ from linebot.models import (
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 # parser = WebhookParser('1e7ab9437dc85f54d08cf117425398ca')
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
+static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+
+
+# function for create tmp dir for download content
+def make_static_tmp_dir():
+    try:
+        os.makedirs(static_tmp_path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(static_tmp_path):
+            pass
+        else:
+            raise
+
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
@@ -198,12 +215,35 @@ def default(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
-    # line_bot_api.reply_message(event.reply_token, TextSendMessage('Send Success!!'))
-    # message_content = line_bot_api.get_message_content(event.message.type)
-    data = open('./static/download.jpg', 'rb').read()
-    print(type(data))
-    apiMl.getObjectDetection(data)
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
+    if isinstance(event.message, ImageMessage):
+        ext = 'jpg'
+    elif isinstance(event.message, VideoMessage):
+        ext = 'mp4'
+    elif isinstance(event.message, AudioMessage):
+        ext = 'm4a'
+    else:
+        return
+
+    message_content = line_bot_api.get_message_content(event.message.id)
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+        for chunk in message_content.iter_content():
+            tf.write(chunk)
+        tempfile_path = tf.name
+
+    dist_path = tempfile_path + '.' + ext
+    dist_name = os.path.basename(dist_path)
+    os.rename(tempfile_path, dist_path)
+    # data = open('./static/download.jpg', 'rb').read()
+    print(type(dist_path))
+    apiMl.getObjectDetection(dist_path)
+    line_bot_api.reply_message(
+        event.reply_token, [
+            TextSendMessage(text='Save content.'),
+            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+        ])
+
+    # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
+
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
