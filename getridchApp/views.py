@@ -204,8 +204,10 @@ def handle_postback(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
     elif event.postback.data == 'getNearbyLocation':
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=apiApp.getNearbyAddress))
+        lists = apiApp.getNearbyAddress
+        for list in lists:
+            line_bot_api.reply_message(
+                event.reply_token, TextSendMessage(text=list.name + list.address))
 
 
 @handler.default()
