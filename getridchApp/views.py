@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, request
 from django.views.decorators.csrf import csrf_exempt
-import os
-import tempfile
+from . import apiMl
 from linebot import LineBotApi, WebhookParser, WebhookHandler
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import (
@@ -203,6 +202,7 @@ def handle_image_message(event):
 
     message_content = line_bot_api.get_message_content(event.message.id)
     print(message_content)
+    apiMl.getObjectDetection(message_content)
     line_bot_api.reply_message(
         event.reply_token, [
             TextSendMessage(text='Save content.'),
