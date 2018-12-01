@@ -41,6 +41,20 @@ def handle_text_message(event):
     text = event.message.text
     if text == 'Hello':
         line_bot_api.reply_message(event.reply_token, TextSendMessage('Hi There!!'))
+    elif text.lower() == 'getridch':
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(text='What you can do', title='Seller', actions=[
+                CameraAction(label='Take a photo'),
+                PostbackAction(label='ping', data='ping')
+            ]),
+            CarouselColumn(text='hoge2', title='fuga2', actions=[
+                PostbackAction(label='ping with text', data='ping', text='ping'),
+                MessageAction(label='Translate Rice', text='米')
+            ]),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Carousel alt text', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
