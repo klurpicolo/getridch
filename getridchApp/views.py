@@ -202,9 +202,8 @@ def handle_image_message(event):
 
     message_content = line_bot_api.get_message_content(event.message.type)
     # data = open('C:/Users/Welly-TP/Desktop/2018-07-27_23-45-18.png', 'rb').read()
+    print(type(message_content))
     apiMl.getObjectDetection(message_content)
-    print(message_content)
-    apiMl.getObjectDetection()
     line_bot_api.reply_message(
         event.reply_token, [
             TextSendMessage(text='Save content.')
