@@ -200,9 +200,9 @@ def default(event):
 def handle_image_message(event):
     # line_bot_api.reply_message(event.reply_token, TextSendMessage('Send Success!!'))
 
-    message_content = line_bot_api.get_message_content(event.message.id)
-    data = open('C:/Users/Welly-TP/Desktop/2018-07-27_23-45-18.png', 'rb').read()
-    apiMl.getObjectDetection(data)
+    message_content = line_bot_api.get_message_content(event.message.contentProvider.line)
+    # data = open('C:/Users/Welly-TP/Desktop/2018-07-27_23-45-18.png', 'rb').read()
+    apiMl.getObjectDetection(message_content)
     print(message_content)
     apiMl.getObjectDetection()
     line_bot_api.reply_message(
