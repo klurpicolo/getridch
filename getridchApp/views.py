@@ -212,17 +212,16 @@ def handle_image_message(event):
     else:
         return
 
-    message_content = line_bot_api.get_message_content(event.message.id)
+    message_content = line_bot_api.get_message_content(event.message.id.content)
 
-    static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-    print(static_tmp_path)
+    # static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+    # print(static_tmp_path)
 
-
-    dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
+    # dist_path = tempfile_path + '.' + ext
+    # dist_name = os.path.basename(dist_path)
     # os.rename(tempfile_path, dist_path)
     # data = open('./static/download.jpg', 'rb').read()
-    print(type(dist_path))
+    print(type(message_content))
     apiMl.getObjectDetection(message_content)
     line_bot_api.reply_message(
         event.reply_token, [
