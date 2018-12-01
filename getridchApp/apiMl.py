@@ -1,5 +1,8 @@
 import requests
-import json
+
+prc_bottle = 0.5
+prc_can = 0.6
+prc_glass = 0.4
 
 
 def getObjectType():
@@ -65,6 +68,11 @@ def getObjectDetection(data):
     print("There are %d bottle" % (qtybottle))
     print("There are %d can" % (qtycan))
     print("There are %d glass" % (qtyglass))
+    total = (prc_bottle * qtybottle) + (prc_can * qtycan) + (prc_glass * qtyglass)
+    return_dict = {'Total': total, 'qty_bottle': qtybottle, 'prc_bottle': prc_bottle, 'qty_can': qtycan, 'prc_can': prc_can,'qty_glass': qtyglass, 'prc_glass': prc_glass}
+
+    return return_dict
 
 if __name__ == '__main__':
-    print(getObjectDetection())
+    data = open('C:/Users/warit.b/Downloads/used plastic bottle _ Google Search/444.jpg', 'rb').read()
+    print(getObjectDetection(data)['Total'])
