@@ -222,7 +222,9 @@ def handle_image_message(event):
     # os.rename(tempfile_path, dist_path)
     # data = open('./static/download.jpg', 'rb').read()
     print(type(message_content))
-    apiMl.getObjectDetection(message_content)
+    data = line_bot_api.get_message_content(message_content)
+    print(type(data))
+    apiMl.getObjectDetection(data)
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
 
     # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
