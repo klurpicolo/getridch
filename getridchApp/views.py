@@ -218,7 +218,7 @@ def handle_image_message(event):
     data = apiMl.getObjectDetection(message_content.content)
 
     carousel_template = CarouselTemplate(columns=[
-        CarouselColumn(text='Your product', actions=[
+        CarouselColumn(text='Total Price : ' + str(data['Total']), title='Your product', actions=[
             PostbackAction(label='Test text', data='ping', text='ping'),
             MessageAction('Total Price : ' + str(data['Total']))
         ]),
