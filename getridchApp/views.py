@@ -2,6 +2,7 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from . import apiMl
+from . import apiApp
 import json
 import requests
 from linebot import LineBotApi, WebhookParser, WebhookHandler
@@ -204,7 +205,7 @@ def handle_postback(event):
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
     elif event.postback.data == 'getNearbyLocation':
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text='Debug : Put trash location here'))
+            event.reply_token, TextSendMessage(text=apiApp.getNearbyAddress))
 
 
 @handler.default()
