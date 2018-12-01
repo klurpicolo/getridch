@@ -159,8 +159,8 @@ def handle_text_message(event):
         line_bot_api.reply_message(event.reply_token, template_message)
     elif text == 'list':
         carousel_template = CarouselTemplate(columns=[
-            CarouselColumn(text='hoge1', title='fuga1', actions=[
-                URIAction(label='Go to line.me', uri='https://line.me'),
+            CarouselColumn(text='What you can do', title='Seller', actions=[
+                CameraAction(label='Take a photo'),
                 PostbackAction(label='ping', data='ping')
             ]),
             CarouselColumn(text='hoge2', title='fuga2', actions=[
