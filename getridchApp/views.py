@@ -205,7 +205,7 @@ def handle_image_message(event):
 
     carousel_template = CarouselTemplate(columns=[
         CarouselColumn(text='Your product', actions=[
-            TextSendMessage('Total : ' + data['Total']),
+            TextSendMessage('Total : ' + data['Total'].text),
             PostbackAction(label='ping', data='ping')
         ]),
     ])
