@@ -81,10 +81,11 @@ def getObjectDetection(data):
     print("There are %d can" % (qtycan))
     print("There are %d glass" % (qtyglass))
     total = (prc_bottle * qtybottle) + (prc_can * qtycan) + (prc_glass * qtyglass)
+    return_dict = {'Total': total, 'qty_bottle': qtybottle, 'prc_bottle': prc_bottle, 'qty_can': qtycan, 'prc_can': prc_can,'qty_glass': qtyglass, 'prc_glass': prc_glass}
 
-    return total
+    return return_dict
 
 
 if __name__ == '__main__':
     data = open('C:/Users/warit.b/Downloads/used plastic bottle _ Google Search/444.jpg', 'rb').read()
-    print(getObjectDetection(data))
+    print(getObjectDetection(data)['Total'])
