@@ -18,9 +18,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+import os
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g%w)y0ra*50ln0gi6=v7&czk^mji!5r6pl4$)&7s#zuxvduqr('
+
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = 'Set the {} environment variable'.format(var_name)
+try:
+    from .settings_secret import *
+except ImportError:
+    SECRET_KEY = 'g%w)y0ra*50ln0gi6=v7&czk^mji!5r6pl4$)&7s#zuxvduqr('
+    LINE_CHANNEL_ACCESS_TOKEN = get_env_variable('FM6Q6U/BAWJlaQMzPOneNK6QT0Di9qZ93VtKt4w6NnnX1U6/1fqduzsoAjW3/kpnVrLj4GGobh/XsVqZaccp+Ra44QRKxrL6m8fFFDhUOpGvDKFu5P4Qf1c1I0qe6p9FAA7Mno9YPr510Sfh3B8xxwdB04t89/1O/w1cDnyilFU=')
+    LINE_CHANNEL_SECRET = get_env_variable('1e7ab9437dc85f54d08cf117425398ca')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
