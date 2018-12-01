@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, request
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from . import apiMl
 import json
@@ -173,27 +173,6 @@ def handle_text_message(event):
         template_message = TemplateSendMessage(
             alt_text='Carousel alt text', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
-    elif text == 'f':
-        json_line = request.get_json()
-        json_line = json.dumps(json_line)
-        decoded = json.loads(json_line)
-        user = decoded["events"][0]['replyToken']
-        # id=[d['replyToken'] for d in user][0]
-        # print(json_line)
-        print("ผู้ใช้：", user)
-        LINE_API = 'https://api.line.me/v2/bot/message/reply'
-        Authorization = 'Bearer ENTER_ACCESS_TOKEN'  # ใส่ ENTER_ACCESS_TOKEN เข้าไป
-        headers = {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': Authorization
-        }
-        data = json.dumps({
-            "replyToken": user,
-            "messages": [{"type": "text", "text": 'fff'}]})
-        # print("ข้อมูล：",data)
-        r = requests.post(LINE_API, headers=headers, data=data)  # ส่งข้อมูล
-        print(r.text)
-        return '', 200
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
 
@@ -219,35 +198,20 @@ def default(event):
         TextSendMessage(text='Currently Not Support None Text Message')
     )
 
-
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
-    if isinstance(event.message, ImageMessage):
-        ext = 'jpg'
-    elif isinstance(event.message, VideoMessage):
-        ext = 'mp4'
-    elif isinstance(event.message, AudioMessage):
-        ext = 'm4a'
-    else:
-        return
-
     message_content = line_bot_api.get_message_content(event.message.id)
+    data = apiMl.getObjectDetection(message_content.content)
 
-    # static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-    # print(static_tmp_path)
-
-    # dist_path = tempfile_path + '.' + ext
-    # dist_name = os.path.basename(dist_path)
-    # os.rename(tempfile_path, dist_path)
-    # data = open('./static/download.jpg', 'rb').read()
-    # print('message_content id : ' + message_content)
-    # data = line_bot_api.get_message_content(message_content.content)
-    # print('data : ' + type(data))
-    apiMl.getObjectDetection(message_content.content)
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
-
-    # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Save content.'))
-
+    carousel_template = CarouselTemplate(columns=[
+        CarouselColumn(text='Your product', actions=[
+            TextSendMessage('Total : ' + data['Total']),
+            PostbackAction(label='ping', data='ping')
+        ]),
+    ])
+    template_message = TemplateSendMessage(
+        alt_text='Carousel alt text', template=carousel_template)
+    line_bot_api.reply_message(event.reply_token, template_message)
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
