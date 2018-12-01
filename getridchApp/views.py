@@ -219,15 +219,10 @@ def handle_image_message(event):
     data = apiMl.getObjectDetection(message_content.content)
     textStr = 'Total Price : ' + str(data['Total']) + 'Baht'
     print(textStr)
-    carousel_template = CarouselTemplate(columns=[
-        CarouselColumn(text=textStr, title='You can get ri(d)ch', actions=[
-            PostbackAction(label='Test text', data='ping', text='ping'),
-            MessageAction('Total Price : ' + str(data['Total']))
-        ]),
-    ])
-    template_message = TemplateSendMessage(
-        alt_text='Carousel alt text', template=carousel_template)
-    line_bot_api.reply_message(event.reply_token, template_message)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=textStr)
+    )
 
 
 @handler.add(MessageEvent, message=LocationMessage)
