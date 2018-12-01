@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, request
 from django.views.decorators.csrf import csrf_exempt
-
+import os
+import tempfile
 from linebot import LineBotApi, WebhookParser, WebhookHandler
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import (
@@ -21,8 +22,9 @@ from linebot.models import (
 )
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
-parser = WebhookParser('1e7ab9437dc85f54d08cf117425398ca')
+# parser = WebhookParser('1e7ab9437dc85f54d08cf117425398ca')
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
+static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
 
 @handler.add(MessageEvent, message=StickerMessage)
@@ -199,8 +201,31 @@ def default(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
-    line_bot_api.reply_message(event.reply_token, TextSendMessage('Send Success!!'))
+    # line_bot_api.reply_message(event.reply_token, TextSendMessage('Send Success!!'))
+    if isinstance(event.message, ImageMessage):
+        ext = 'jpg'
+    elif isinstance(event.message, VideoMessage):
+        ext = 'mp4'
+    elif isinstance(event.message, AudioMessage):
+        ext = 'm4a'
+    else:
+        return
 
+    message_content = line_bot_api.get_message_content(event.message.id)
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+        for chunk in message_content.iter_content():
+            tf.write(chunk)
+        tempfile_path = tf.name
+
+    dist_path = tempfile_path + '.' + ext
+    dist_name = os.path.basename(dist_path)
+    os.rename(tempfile_path, dist_path)
+
+    line_bot_api.reply_message(
+        event.reply_token, [
+            TextSendMessage(text='Save content.'),
+            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+        ])
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
