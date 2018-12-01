@@ -1,5 +1,8 @@
 import requests
-import json
+
+prc_bottle = 0.5
+prc_can = 0.6
+prc_glass = 0.4
 
 
 def getObjectType():
@@ -35,6 +38,18 @@ def getObjectType():
 
 
 def getObjectDetection(data):
+    # url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/f8f2f5c1-3f93-4a67-ab5c-6d1998961457/url"
+
+    # querystring = {"iterationId": "07f8a4d6-8602-471f-b14d-bc97b6fb3f27"}
+    #
+    # payload = "{\"Url\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrQmXGhGjvp5zSAyrn6aIz6uA1Apg-R3zZ8lvOYcI_as4GbtiS\"}"
+    # headers = {
+    #     'prediction-key': "e46e7620ef0448e19fb945f23248506c",
+    #     'content-type': "application/json",
+    #     'cache-control': "no-cache",
+    #     'postman-token': "cdb5fadd-fad6-c5d5-753c-444015bb2a31"
+    # }
+
     url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/f8f2f5c1-3f93-4a67-ab5c-6d1998961457/image"
 
     querystring = {"iterationId": "07f8a4d6-8602-471f-b14d-bc97b6fb3f27"}
@@ -65,6 +80,12 @@ def getObjectDetection(data):
     print("There are %d bottle" % (qtybottle))
     print("There are %d can" % (qtycan))
     print("There are %d glass" % (qtyglass))
+    total = (prc_bottle * qtybottle) + (prc_can * qtycan) + (prc_glass * qtyglass)
+    return_dict = {'Total': total, 'qty_bottle': qtybottle, 'prc_bottle': prc_bottle, 'qty_can': qtycan, 'prc_can': prc_can,'qty_glass': qtyglass, 'prc_glass': prc_glass}
+
+    return return_dict
+
 
 if __name__ == '__main__':
-    print(getObjectDetection())
+    data = open('C:/Users/warit.b/Downloads/used plastic bottle _ Google Search/444.jpg', 'rb').read()
+    print(getObjectDetection(data)['Total'])
