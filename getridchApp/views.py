@@ -204,11 +204,10 @@ def handle_postback(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
     elif event.postback.data == 'getNearbyLocation':
-        data = apiApp.getNearbyAddress
-        for row in data:
-            reply_text = row[0] + '@' + row[1]
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text=reply_text))
+        data = apiApp.getNearbyAddress()
+        text_message_list = [TextSendMessage(text=row[0] + '@' + row[1]) for row in data]
+        line_bot_api.reply_message(
+            event.reply_token, text_message_list)
     elif event.postback.data == 'location':
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Please enter your location'))
     elif event.postback.data == 'cancel':
@@ -245,9 +244,10 @@ def handle_image_message(event):
     textStr += '\n Confirm order? '
     print(textStr)
 
-    buttons_template = ButtonsTemplate(title='My stuff', text=textStr,
+    buttons_template = ButtonsTemplate(title='My stuff', text='textStr',
                                        actions=[PostbackAction(label='Confirm', data='location'),
-                                                PostbackAction(label='cancel', data='cancel', text='cancel')])
+                                                PostbackAction(label='cancel', data='cancel', text='cancel'),
+                                                ])
     template_message = TemplateSendMessage(alt_text='Buttons alt text', template=buttons_template)
     line_bot_api.reply_message(event.reply_token, template_message)
 
