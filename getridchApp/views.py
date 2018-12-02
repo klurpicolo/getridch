@@ -217,8 +217,8 @@ def default(event):
 def handle_image_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     data = apiMl.getObjectDetection(message_content.content)
-    textStr=''
-    if data['qtybottle'] > 0:
+    textStr = ''
+    if data['qty_bottle'] > 0:
         textStr += 'Bottle : \n'
         textStr += '    Amount ' + str(data['qtybottle']) + '\n'
         textStr += '    Price ' + str(data['prc_bottle']) + '\n'
@@ -282,5 +282,3 @@ def callback(request):
         return HttpResponse()
     else:
         return HttpResponseBadRequest()
-
-    app.run(debug=options.debug, port=options.port)
