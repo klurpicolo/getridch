@@ -1,3 +1,5 @@
+from builtins import type
+
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -225,7 +227,7 @@ def default(event):
 def handle_image_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     data = apiMl.getObjectDetection(message_content.content)
-    textStr = ''
+    textStr: str = ''
     if data['qty_bottle'] > 0:
         textStr += 'Bottle : \n'
         textStr += '    Amount ' + str(data['qty_bottle']) + '\n'
@@ -242,13 +244,11 @@ def handle_image_message(event):
     textStr += '\n Confirm order? '
     print(textStr)
     print(len(textStr))
-    buttons_template = ButtonsTemplate(title='My stuff', text='textStr',
+    buttons_template = ButtonsTemplate(title='My stuff', text=textStr,
                                        actions=[PostbackAction(label='Confirm', data='location'),
                                                 PostbackAction(label='cancel', data='cancel', text='cancel')])
     template_message = TemplateSendMessage(alt_text='Buttons alt text', template=buttons_template)
     line_bot_api.reply_message(event.reply_token, template_message)
-
-    # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=textStr))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
