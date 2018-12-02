@@ -66,18 +66,18 @@ def handle_text_message(event):
                             action=PostbackAction(label="getridch", data="getridch")
                         ),
                         QuickReplyButton(
+                            action=CameraAction(label="Camera")
+                        ),
+                        QuickReplyButton(
+                            action=CameraRollAction(label="Camera Roll")
+                        ),
+                        QuickReplyButton(
+                            action=LocationAction(label="Location")
+                        ),
+                        QuickReplyButton(
                             action=DatetimePickerAction(label="Date",
                                                         data="data3",
                                                         mode="date")
-                        ),
-                        QuickReplyButton(
-                            action=CameraAction(label="label4")
-                        ),
-                        QuickReplyButton(
-                            action=CameraRollAction(label="label5")
-                        ),
-                        QuickReplyButton(
-                            action=LocationAction(label="label6")
                         ),
                     ])))
     elif text == 'profile':
