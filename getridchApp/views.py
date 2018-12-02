@@ -227,7 +227,7 @@ def default(event):
 def handle_image_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     data = apiMl.getObjectDetection(message_content.content)
-    textStr: str = ''
+    textStr = ''
     if data['qty_bottle'] > 0:
         textStr += 'Bottle : \n'
         textStr += '    Amount ' + str(data['qty_bottle']) + '\n'
