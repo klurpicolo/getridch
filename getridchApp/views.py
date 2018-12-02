@@ -244,8 +244,7 @@ def handle_image_message(event):
     print(len(textStr))
     buttons_template = ButtonsTemplate(title='My stuff', text=textStr,
                                        actions=[PostbackAction(label='Confirm', data='location'),
-                                                PostbackAction(label='cancel', data='cancel', text='cancel'),
-                                                ])
+                                                PostbackAction(label='cancel', data='cancel', text='cancel')])
     template_message = TemplateSendMessage(alt_text='Buttons alt text', template=buttons_template)
     line_bot_api.reply_message(event.reply_token, template_message)
 
