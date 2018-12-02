@@ -230,17 +230,17 @@ def handle_image_message(event):
         textStr += 'Can : \n'
         textStr += '    Amount ' + str(data['qty_can']) + '\n'
         textStr += '    Price ' + str(data['prc_can']) + '\n'
-    if data['qty_can'] > 0:
+    if data['qty_glass'] > 0:
         textStr += 'Glass : \n'
         textStr += '    Amount ' + str(data['qty_glass']) + '\n'
         textStr += '    Price ' + str(data['prc_glass']) + '\n'
     textStr += 'Total Price : ' + str(data['Total']) + ' Baht \n'
     print(textStr)
-
+    textStr += '\n\n Confirm order? '
     confirm_template_message = TemplateSendMessage(
         alt_text='Confirm template',
         template=ConfirmTemplate(
-            text= textStr + '\n\n Confirm order? ' ,
+            text=textStr,
             actions=[
                 PostbackTemplateAction(
                     label='postback',
