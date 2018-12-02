@@ -220,7 +220,7 @@ def handle_image_message(event):
     textStr = ''
     if data['qty_bottle'] > 0:
         textStr += 'Bottle : \n'
-        textStr += '    Amount ' + str(data['qtybottle']) + '\n'
+        textStr += '    Amount ' + str(data['qty_bottle']) + '\n'
         textStr += '    Price ' + str(data['prc_bottle']) + '\n'
     if data['qty_can'] > 0:
         textStr += 'Can : \n'
