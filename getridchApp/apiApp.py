@@ -18,6 +18,6 @@ def getNearbyAddress():
     c = conn.cursor()
     c.execute("select name, address from getridchApp_seller")
     data = c.fetchall()
-    for row in data:
-        result = result + row[1] + '@' + row[2]
-    return result
+    # for row in data:
+    #     result = result + row[0] + '@' + row[1] + '\n'
+    return data
