@@ -204,8 +204,8 @@ def handle_postback(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
     elif event.postback.data == 'getNearbyLocation':
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text=apiApp.getNearbyAddress))
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=apiApp.getNearbyAddress))
     elif event.postback.data == 'location':
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Please enter your location'))
     elif event.postback.data == 'cancel':
@@ -241,7 +241,7 @@ def handle_image_message(event):
     textStr += 'Total Price : ' + str(data['Total']) + ' Baht \n'
     textStr += '\n Confirm order? '
     print(textStr)
-
+    print(len(textStr))
     buttons_template = ButtonsTemplate(title='My stuff', text=textStr,
                                        actions=[PostbackAction(label='Confirm', data='location'),
                                                 PostbackAction(label='cancel', data='cancel', text='cancel'),
