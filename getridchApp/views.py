@@ -206,6 +206,10 @@ def handle_postback(event):
     elif event.postback.data == 'getNearbyLocation':
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text=apiApp.getNearbyAddress))
+    elif event.postback.data == 'location':
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Please enter your location'))
+    elif event.postback.data == 'cancel':
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='getridch'))
 
 
 @handler.default()
@@ -238,9 +242,9 @@ def handle_image_message(event):
     textStr += '\n Confirm order? '
     print(textStr)
 
-    buttons_template = ButtonsTemplate(title='My buttons sample', text='textStr',
-                                       actions=[PostbackAction(label='Confirm', data='textStr'),
-                                                PostbackAction(label='cancel', data='ping', text='cancel'),
+    buttons_template = ButtonsTemplate(title='My stuff', text=textStr,
+                                       actions=[PostbackAction(label='Confirm', data='location'),
+                                                PostbackAction(label='cancel', data='cancel', text='cancel'),
                                                 ])
     template_message = TemplateSendMessage(alt_text='Buttons alt text', template=buttons_template)
     line_bot_api.reply_message(event.reply_token, template_message)
