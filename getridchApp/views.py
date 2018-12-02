@@ -190,9 +190,17 @@ def handle_text_message(event):
         template_message = TemplateSendMessage(
             alt_text='Carousel alt text', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'KBTG':
+        confirm_template = ConfirmTemplate(text='Confirm Address : KBTG ?',
+                                           actions=[PostbackAction(label='Confirm', data='cfaddress'),
+                                                    PostbackAction(label='cancel', data='getridch',
+                                                                   text='cancel'),
+                                                    ])
+        template_message = TemplateSendMessage(alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
     # else:
     #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
-
+    
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
@@ -212,8 +220,23 @@ def handle_postback(event):
             event.reply_token, text_message_list)
     elif event.postback.data == 'location':
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Please enter your location'))
-    elif event.postback.data == 'cancel':
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='getridch'))
+    elif event.postback.data == 'getridch':
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(text='What you can do', title='Seller', actions=[
+                CameraAction(label='Take a photo'),
+                # PostbackAction(label='ping', data='ping')
+            ]),
+            CarouselColumn(text='What you can do', title='Buyer', actions=[
+                PostbackAction(label='Get near by trash', data='getNearbyLocation', text='Show location'),
+                # MessageAction(label='Translate Rice', text='米')
+            ]),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Carousel alt text', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif event.postback.data == 'cfaddress':
+        apiApp.setSellerAddress('KBTG', 'well', '0970909591', 'KBTG')
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Order success!!'))
 
 
 @handler.default()
@@ -247,7 +270,7 @@ def handle_image_message(event):
     print(textStr)
 
     confirm_template = ConfirmTemplate(text=textStr, actions=[PostbackAction(label='Confirm', data='location'),
-                                                              PostbackAction(label='cancel', data='cancel',
+                                                              PostbackAction(label='cancel', data='getridch',
                                                                              text='cancel'),
                                                               ])
     template_message = TemplateSendMessage(alt_text='Confirm alt text', template=confirm_template)
