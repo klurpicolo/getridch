@@ -231,24 +231,9 @@ def handle_image_message(event):
         textStr += '    Amount ' + str(data['qty_glass']) + '\n'
         textStr += '    Price ' + str(data['prc_glass']) + '\n'
     textStr += 'Total Price : ' + str(data['Total']) + ' Baht \n'
-    print(textStr)
     textStr += '\n\n Confirm order? '
-    confirm_template_message = TemplateSendMessage(
-        alt_text='Confirm template',
-        template=ConfirmTemplate(
-            text=textStr,
-            actions=[PostbackTemplateAction(label='postback',
-                                            text='postback text',
-                                            data='action=buy&itemid=1'
-                                            ),
-                     MessageTemplateAction(label='message',
-                                           text='message text'
-                                           )
-                     ]
-        )
-    )
-
-    line_bot_api.reply_message(event.reply_token, ConfirmTemplate(confirm_template_message))
+    print(textStr)
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=textStr))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
