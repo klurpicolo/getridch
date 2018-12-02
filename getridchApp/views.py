@@ -10,7 +10,7 @@ from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
     SourceUser, SourceGroup, SourceRoom,
-    TemplateSendMessage, ConfirmTemplate, MessageAction,
+    TemplateSendMessage, ConfirmTemplate, MessageAction, PostbackTemplateAction, MessageTemplateAction,
     ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URIAction,
     PostbackAction, DatetimePickerAction,
     CameraAction, CameraRollAction, LocationAction,
@@ -20,7 +20,7 @@ from linebot.models import (
     UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
     FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
     TextComponent, SpacerComponent, IconComponent, ButtonComponent,
-    SeparatorComponent, QuickReply, QuickReplyButton
+    SeparatorComponent, QuickReply, QuickReplyButton,
 )
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
@@ -221,11 +221,43 @@ def default(event):
 def handle_image_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     data = apiMl.getObjectDetection(message_content.content)
-    textStr = 'Total Price : ' + str(data['Total']) + 'Baht'
+    textStr=''
+    if data['qtybottle'] > 0:
+        textStr += 'Bottle : \n'
+        textStr += '    Amount ' + str(data['qtybottle']) + '\n'
+        textStr += '    Price ' + str(data['prc_bottle']) + '\n'
+    if data['qty_can'] > 0:
+        textStr += 'Can : \n'
+        textStr += '    Amount ' + str(data['qty_can']) + '\n'
+        textStr += '    Price ' + str(data['prc_can']) + '\n'
+    if data['qty_can'] > 0:
+        textStr += 'Glass : \n'
+        textStr += '    Amount ' + str(data['qty_glass']) + '\n'
+        textStr += '    Price ' + str(data['prc_glass']) + '\n'
+    textStr += 'Total Price : ' + str(data['Total']) + ' Baht \n'
     print(textStr)
+
+    confirm_template_message = TemplateSendMessage(
+        alt_text='Confirm template',
+        template=ConfirmTemplate(
+            text= textStr + '\n\n Confirm order? ' ,
+            actions=[
+                PostbackTemplateAction(
+                    label='postback',
+                    text='postback text',
+                    data='action=buy&itemid=1'
+                ),
+                MessageTemplateAction(
+                    label='message',
+                    text='message text'
+                )
+            ]
+        )
+    )
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=textStr)
+        ConfirmTemplate(confirm_template_message)
     )
 
 
