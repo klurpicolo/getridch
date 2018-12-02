@@ -215,7 +215,7 @@ def handle_postback(event):
             event.reply_token, TextSendMessage(text=event.postback.params['date']))
     elif event.postback.data == 'getNearbyLocation':
         data = apiApp.getNearbyAddress()
-        text_message_list = [TextSendMessage(text=row[0] + '@' + row[1]) for row in data]
+        text_message_list = [TextSendMessage(text='Line Id : ' + row[0] + ' Address : ' + row[1]) for row in data]
         line_bot_api.reply_message(
             event.reply_token, text_message_list)
     elif event.postback.data == 'location':
@@ -225,6 +225,7 @@ def handle_postback(event):
             CarouselColumn(text='What you can do', title='Seller', actions=[
                 CameraAction(label='Take a photo'),
                 # PostbackAction(label='ping', data='ping')
+                CameraRollAction(label='Choose a photo'),
             ]),
             CarouselColumn(text='What you can do', title='Buyer', actions=[
                 PostbackAction(label='Get near by trash', data='getNearbyLocation', text='Show location'),
@@ -235,8 +236,8 @@ def handle_postback(event):
             alt_text='Carousel alt text', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
     elif event.postback.data == 'cfaddress':
-        apiApp.setSellerAddress('KBTG', 'well', '0970909591', 'KBTG')
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Order success!!'))
+        # apiApp.setSellerAddress('KBTG', 'well', '0970909591', 'KBTG')
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Your order in queue!!'))
 
 
 @handler.default()
