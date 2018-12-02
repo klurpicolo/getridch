@@ -237,24 +237,18 @@ def handle_image_message(event):
         alt_text='Confirm template',
         template=ConfirmTemplate(
             text=textStr,
-            actions=[
-                PostbackTemplateAction(
-                    label='postback',
-                    text='postback text',
-                    data='action=buy&itemid=1'
-                ),
-                MessageTemplateAction(
-                    label='message',
-                    text='message text'
-                )
-            ]
+            actions=[PostbackTemplateAction(label='postback',
+                                            text='postback text',
+                                            data='action=buy&itemid=1'
+                                            ),
+                     MessageTemplateAction(label='message',
+                                           text='message text'
+                                           )
+                     ]
         )
     )
 
-    line_bot_api.reply_message(
-        event.reply_token,
-        ConfirmTemplate(confirm_template_message)
-    )
+    line_bot_api.reply_message(event.reply_token, ConfirmTemplate(confirm_template_message))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
