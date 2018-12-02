@@ -246,7 +246,7 @@ def handle_image_message(event):
     textStr += '\n Confirm order? '
     print(textStr)
 
-    buttons_template = ButtonsTemplate(title='My stuff', text='textStr',
+    buttons_template = ButtonsTemplate(title='My stuff', text=textStr,
                                        actions=[PostbackAction(label='Confirm', data='location'),
                                                 PostbackAction(label='cancel', data='cancel', text='cancel'),
                                                 ])
