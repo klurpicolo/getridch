@@ -45,7 +45,7 @@ def handle_text_message(event):
     elif text.lower() == 'getridch':
         carousel_template = CarouselTemplate(columns=[
             CarouselColumn(text='What you can do', title='Seller', actions=[CameraAction(label='Take a photo'),
-                                                                            CameraRollAction(label='Choose a photo')
+                                                                            CameraRollAction(label='Choose a photo'),
                                                                             ]),
             CarouselColumn(text='What you can do', title='Buyer', actions=[
                 PostbackAction(label='Get near by trash', data='getNearbyLocation', text='Show location'),
@@ -55,6 +55,31 @@ def handle_text_message(event):
         template_message = TemplateSendMessage(
             alt_text='Carousel alt text', template=carousel_template)
         line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'menu':
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text='Quick reply',
+                quick_reply=QuickReply(
+                    items=[
+                        QuickReplyButton(
+                            action=PostbackAction(label="getridch", data="getridch")
+                        ),
+                        QuickReplyButton(
+                            action=DatetimePickerAction(label="Date",
+                                                        data="data3",
+                                                        mode="date")
+                        ),
+                        QuickReplyButton(
+                            action=CameraAction(label="label4")
+                        ),
+                        QuickReplyButton(
+                            action=CameraRollAction(label="label5")
+                        ),
+                        QuickReplyButton(
+                            action=LocationAction(label="label6")
+                        ),
+                    ])))
     elif text == 'profile':
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
