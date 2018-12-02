@@ -229,15 +229,23 @@ def handle_image_message(event):
     if data['qty_can'] > 0:
         textStr += 'Can : \n'
         textStr += '    Amount ' + str(data['qty_can']) + '\n'
-        textStr += '    Price ' + str(data['prc_can']) + '\n'
+        textStr += '    Price ' + str(data['prc_can']) + ' Baht\n'
     if data['qty_glass'] > 0:
         textStr += 'Glass : \n'
         textStr += '    Amount ' + str(data['qty_glass']) + '\n'
-        textStr += '    Price ' + str(data['prc_glass']) + '\n'
+        textStr += '    Price ' + str(data['prc_glass']) + ' Baht\n'
     textStr += 'Total Price : ' + str(data['Total']) + ' Baht \n'
-    textStr += '\n\n Confirm order? '
+    textStr += '\n Confirm order? '
     print(textStr)
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=textStr))
+
+    buttons_template = ButtonsTemplate(title='My buttons sample', text='textStr',
+                                       actions=[PostbackAction(label='Confirm', data='textStr'),
+                                                PostbackAction(label='cancel', data='ping', text='cancel'),
+                                                ])
+    template_message = TemplateSendMessage(alt_text='Buttons alt text', template=buttons_template)
+    line_bot_api.reply_message(event.reply_token, template_message)
+
+    # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=textStr))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
