@@ -249,7 +249,6 @@ def handle_postback(event):
             CarouselColumn(text='What you can do', title='Seller', actions=[
                 CameraAction(label='Take a photo'),
                 # PostbackAction(label='ping', data='ping')
-                CameraRollAction(label='Choose a photo'),
             ]),
             CarouselColumn(text='What you can do', title='Buyer', actions=[
                 PostbackAction(label='Get near by trash', data='getNearbyLocation', text='Show location'),
